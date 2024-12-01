@@ -11,19 +11,19 @@ def main(request):
     if request.method == 'POST':
         # JSON 형식으로 데이터를 받음
         data = json.loads(request.body)
-        username = data.get('username')
+        username = data.get('id')
         password = data.get('password')
         
         if username and password:
             # cku_login 함수 호출하여 값 받기
             try:
-                CrawlUserID, CrawlUserName, CrawlUserMajor = cku_login(username, password)
+                studentId, name, department = cku_login(username, password)
                 
                 # 받은 데이터를 JsonResponse로 반환
                 return JsonResponse({
-                    '학번': CrawlUserID,
-                    '이름': CrawlUserName,
-                    '전공': CrawlUserMajor
+                    'studentId': studentId,
+                    'name': name,
+                    'department': department
                 })
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=400)

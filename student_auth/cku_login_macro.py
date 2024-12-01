@@ -103,6 +103,7 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+import re
 
 def cku_login(username, password):
     url = "https://info.cku.ac.kr/haksa/common/loginForm2.jsp"
@@ -165,24 +166,42 @@ def cku_login(username, password):
 
     soup = BeautifulSoup(driver.page_source, 'html.parser')
 
+    # # 이름 추출
+    # name = driver.execute_script('return document.querySelector("td.num").innerText')
+    # print(name) 
+
+    # # 학번 추출
+    # element = driver.find_element(By.CSS_SELECTOR, "#contents > div.dataArea > table > tbody > tr:nth-child(2) > td:nth-child(2)")
+    # studentId = element.text
+    # print(studentId)
+
+    # # 전공 추출
+    # element = driver.find_element(By.CSS_SELECTOR, "#contents > div.dataArea > table > tbody > tr:nth-child(3) > td:nth-child(4)")
+    # department = element.text
+    # print(department)
+
     # 학번 추출
-    CrawlUserID = driver.execute_script('return document.querySelector("td.num").innerText')
-    print(CrawlUserID)
+    studentId = driver.execute_script('return document.querySelector("td.num").innerText')
+    print(studentId) 
 
     # 이름 추출
     element = driver.find_element(By.CSS_SELECTOR, "#contents > div.dataArea > table > tbody > tr:nth-child(2) > td:nth-child(2)")
-    CrawlUserName = element.text
-    print(CrawlUserName)
+    name = element.text
+    print(name)
 
     # 전공 추출
     element = driver.find_element(By.CSS_SELECTOR, "#contents > div.dataArea > table > tbody > tr:nth-child(3) > td:nth-child(4)")
-    CrawlUserMajor = element.text
-    print(CrawlUserMajor)
+    department = element.text
+    print(department)
+
+    # 전공에서 숫자(학년) 부분 제거하기
+    department = re.sub(r"\s\d+$", "", department)
+    print("전공 (숫자 제거 후):", department)
 
     # 로그인 후 값 반환, 웹사이트 닫기
     time.sleep(2)  # 페이지 로드 대기
     driver.quit()
-    return CrawlUserName, CrawlUserID, CrawlUserMajor
+    return studentId, name, department
 
 if __name__ == '__main__':
     cku_login()
