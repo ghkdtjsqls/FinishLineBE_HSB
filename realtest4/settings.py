@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,6 +47,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'exclass_db',
+    'pdf_save',
+    'user_auth',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -88,11 +93,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 
 #허용할 출처 추가
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',  # React 앱의 URL 추가
-    'http://127.0.0.1:8000',
-    'https://localhost:3000',
-]
+CORS_ALLOW_ALL_ORIGINS = True  # 개발 환경에서는 모든 출처를 허용
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
@@ -161,3 +162,31 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_COOKIE_HTTPONLY = False  # CSRF 쿠키를 JavaScript에서 읽을 수 있도록 설정
 CSRF_COOKIE_SECURE = False  # 개발 환경에서만 설정, HTTPS가 아닌 경우
+
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
+
+if DEBUG:
+    # 로컬 환경 설정
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
+else:
+    # 프로덕션 환경 설정 (S3 사용)
+    AWS_ACCESS_KEY_ID = 'your-access-key-id'
+    AWS_SECRET_ACCESS_KEY = 'your-secret-access-key'
+    AWS_STORAGE_BUCKET_NAME = 'your-bucket-name'
+    AWS_S3_REGION_NAME = 'your-region'
+    
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),  # 클라이언트에서 Authorization 헤더에 Bearer 토큰으로 전송
+}

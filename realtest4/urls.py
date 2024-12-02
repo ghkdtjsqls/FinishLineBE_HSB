@@ -22,4 +22,6 @@ urlpatterns = [
     path('student_auth/', include('student_auth.urls')),
     path('crsf_token/', include('crsf_token.urls')),
     path('exclass_db/', include('exclass_db.urls')),
+    path('pdf_save/', include('pdf_save.urls')),
+    path('user_auth/', include('user_auth.urls')),
 ]
