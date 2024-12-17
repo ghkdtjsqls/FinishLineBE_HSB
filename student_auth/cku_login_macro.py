@@ -106,18 +106,33 @@ from selenium.webdriver.chrome.options import Options
 import re
 
 def cku_login(username, password):
+    # url = "https://info.cku.ac.kr/haksa/common/loginForm2.jsp"
+    # driver = webdriver.Chrome()
+    # driver.get(url)
+    # time.sleep(2)
+
+    # # 헤드리스 모드 설정, 실행
+    # chrome_options = Options()
+    # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--disable-gpu")  
+    # driver = webdriver.Chrome(options=chrome_options)
+    # driver.get("https://info.cku.ac.kr/haksa/common/loginForm2.jsp")
+    # time.sleep(2)
+
     url = "https://info.cku.ac.kr/haksa/common/loginForm2.jsp"
-    driver = webdriver.Chrome()
+
+    # 헤드리스 모드 설정
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    # 웹드라이버 시작 (헤드리스 모드로 실행)
+    driver = webdriver.Chrome(options=chrome_options)
     driver.get(url)
     time.sleep(2)
 
-    # 헤드리스 모드 설정, 실행
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-gpu")  
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.get("https://info.cku.ac.kr/haksa/common/loginForm2.jsp")
-    time.sleep(2)
 
     # 통합 로그인 버튼 클릭 (이미지 맵의 링크 요소 접근)
     element = WebDriverWait(driver, 10).until(

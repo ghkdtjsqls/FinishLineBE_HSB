@@ -7,6 +7,14 @@ import os
 import re
 from .models import MySubjectList  # 모델 임포트
 
+from rest_framework import viewsets
+from .models import MySubjectList
+from .serializers import MySubjectListSerializer
+
+class MySubjectListViewSet(viewsets.ModelViewSet):
+    queryset = MySubjectList.objects.all()
+    serializer_class = MySubjectListSerializer
+
 def save_subjects_to_db(subjects_data):
     for subject in subjects_data:
         # MySubjectList 모델을 사용하여 교과목 데이터를 DB에 저장

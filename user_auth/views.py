@@ -30,11 +30,17 @@ def login_view(request):
             studentId = data.get('studentId')
             password = data.get('password')
 
+            print(f"Received studentId: {studentId}, password: {password}")
+
             if not studentId or not password:
                 return JsonResponse({"message": "Missing studentId or password"}, status=400)
 
             # authenticate()로 사용자 인증 처리
-            user = authenticate(request, username=studentId, password=password)
+            user = authenticate(request, studentId=studentId, password=password)
+
+            if user is None:
+                print(f"Authentication failed for studentId: {studentId}")
+                return JsonResponse({"message": "Invalid credentials"}, status=400)
 
             if user is not None:
                 # 로그인 성공, 세션 생성

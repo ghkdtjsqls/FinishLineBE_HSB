@@ -38,12 +38,12 @@ class User(AbstractBaseUser):
     def __str__(self):
         return self.name
 
-    # is_anonymous 메소드 추가
-    @property
-    def is_anonymous(self):
-        return not self.is_authenticated
+    # # is_anonymous 메소드 추가
+    # @property
+    # def is_anonymous(self):
+    #     return not self.is_authenticated
 
-    # is_authenticated 메소드 추가
-    @property
-    def is_authenticated(self):
-        return True  # 기본적으로 인증된 상태로 간주 (로그인 상태일 경우)
+    # # is_authenticated 메소드 추가
+    # @property
+    # def is_authenticated(self):
+    #     return True  # 기본적으로 인증된 상태로 간주 (로그인 상태일 경우)
